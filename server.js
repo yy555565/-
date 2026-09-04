@@ -294,6 +294,9 @@ app.delete('/api/goals/:goalId/subtasks/:subtaskId', requireAuth, (req, res) => 
   res.json({ ok: true, goal: getGoal(req.user.id, goalId) });
 });
 
+// Health check (must be registered before the static fallback)
+app.get('/api/health', (req, res) => res.json({ ok: true }));
+
 // ---------- Static ----------
 const distDir = path.join(process.cwd(), 'dist');
 if (fs.existsSync(distDir)) {
@@ -302,9 +305,6 @@ if (fs.existsSync(distDir)) {
     res.sendFile(path.join(distDir, 'index.html'));
   });
 }
-
-// Fallback API route
-app.get('/api/health', (req, res) => res.json({ ok: true }));
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Goal Builder API listening on http://0.0.0.0:${PORT}`);
